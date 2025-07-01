@@ -1,0 +1,40 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - localstack-net
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 10s bash -c 'until echo > /dev/tcp/localhost/4566; do sleep 1; done'"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: localstack-viewer
+    ports:
+      - "3100:3000"
+    env_file:
+      - .env.docker
+    depends_on:
+      localstack:
+        condition: service_healthy
+    networks:
+      - localstack-net
+
+networks:
+  localstack-net:
+    driver: bridge
