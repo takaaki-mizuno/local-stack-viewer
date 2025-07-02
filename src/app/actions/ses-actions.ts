@@ -19,6 +19,20 @@ export interface SESMessageDetail extends SESMessage {
   rawMessage: string;
 }
 
+interface LocalStackSESMessage {
+  Id: string;
+  Timestamp: string;
+  Source: string;
+  Destination?: {
+    ToAddresses?: string[];
+  };
+  Subject: string;
+  Body?: {
+    text_part?: string;
+    html_part?: string;
+  };
+}
+
 export async function checkSESConnection(): Promise<boolean> {
   try {
     const command = new GetAccountSendingEnabledCommand({});
@@ -58,7 +72,7 @@ export async function getMessages(): Promise<SESMessage[]> {
       return [];
     }
 
-    return data.messages.map((msg: any) => ({
+    return data.messages.map((msg: LocalStackSESMessage) => ({
       messageId: msg.Id,
       timestamp: new Date(msg.Timestamp),
       source: msg.Source,

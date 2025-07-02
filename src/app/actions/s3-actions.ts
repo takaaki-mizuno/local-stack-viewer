@@ -54,8 +54,10 @@ export async function listBuckets(): Promise<S3Bucket[]> {
     console.error("Failed to list buckets:", error);
     console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
-      code: (error as any)?.code,
-      statusCode: (error as any)?.$metadata?.httpStatusCode,
+      code: error && typeof error === 'object' && 'code' in error ? error.code : undefined,
+      statusCode: error && typeof error === 'object' && '$metadata' in error && 
+        error.$metadata && typeof error.$metadata === 'object' && 'httpStatusCode' in error.$metadata
+        ? error.$metadata.httpStatusCode : undefined,
       endpoint: process.env.LOCALSTACK_ENDPOINT,
       region: process.env.AWS_DEFAULT_REGION
     });
