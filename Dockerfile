@@ -8,7 +8,7 @@ WORKDIR /app
 
 # 依存関係ファイルをコピー
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 # ビルドステージ
 FROM base AS builder
