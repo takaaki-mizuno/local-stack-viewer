@@ -29,7 +29,7 @@ export default async function SESPage() {
         </div>
       </MainLayout>
     );
-  } catch (error) {
+  } catch {
     return (
       <MainLayout>
         <div className="space-y-6">

@@ -37,7 +37,7 @@ export default async function MessageDetailPage({
         </div>
       </MainLayout>
     );
-  } catch (error) {
+  } catch {
     return (
       <MainLayout>
         <div className="space-y-6">
@@ -58,7 +58,7 @@ export default async function MessageDetailPage({
             <div className="text-destructive">
               <p className="text-lg font-semibold">エラーが発生しました</p>
               <p className="text-sm text-muted-foreground mt-2">
-                メッセージ "{messageId}" の詳細を取得できませんでした
+                メッセージ &quot;{messageId}&quot; の詳細を取得できませんでした
               </p>
             </div>
           </div>

@@ -41,7 +41,7 @@ export default async function ObjectDetailPage({
         </div>
       </MainLayout>
     );
-  } catch (error) {
+  } catch {
     return (
       <MainLayout>
         <div className="space-y-6">
@@ -62,7 +62,7 @@ export default async function ObjectDetailPage({
             <div className="text-destructive">
               <p className="text-lg font-semibold">エラーが発生しました</p>
               <p className="text-sm text-muted-foreground mt-2">
-                オブジェクト "{objectKey}" の詳細を取得できませんでした
+                オブジェクト &quot;{objectKey}&quot; の詳細を取得できませんでした
               </p>
             </div>
           </div>

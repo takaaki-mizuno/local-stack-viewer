@@ -1,7 +1,7 @@
 "use client";
 
 import { SESMessageDetail } from "@/app/actions/ses-actions";
-import { Clock, User, Users, Mail, FileText, Code, Copy } from "lucide-react";
+import { Clock, User, Users, Mail, FileText, Copy } from "lucide-react";
 import { useState } from "react";
 
 interface MessageDetailProps {

@@ -43,7 +43,7 @@ export default async function BucketPage({ params }: BucketPageProps) {
         </div>
       </MainLayout>
     );
-  } catch (error) {
+  } catch {
     return (
       <MainLayout>
         <div className="space-y-6">
@@ -64,7 +64,7 @@ export default async function BucketPage({ params }: BucketPageProps) {
             <div className="text-destructive">
               <p className="text-lg font-semibold">エラーが発生しました</p>
               <p className="text-sm text-muted-foreground mt-2">
-                バケット "{bucketName}" のオブジェクト一覧を取得できませんでした
+                バケット &quot;{bucketName}&quot; のオブジェクト一覧を取得できませんでした
               </p>
             </div>
           </div>
