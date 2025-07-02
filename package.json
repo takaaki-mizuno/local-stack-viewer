@@ -18,7 +18,9 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:restart": "docker compose restart app"
+    "docker:restart": "docker compose restart app",
+    "test:send-email": "node scripts/send-test-email.js",
+    "test:create-s3-data": "node scripts/create-test-s3-data.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.840.0",

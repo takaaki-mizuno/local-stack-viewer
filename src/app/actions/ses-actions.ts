@@ -32,11 +32,48 @@ export async function checkSESConnection(): Promise<boolean> {
 
 export async function getMessages(): Promise<SESMessage[]> {
   try {
-    // LocalStackのSESはメッセージを保存しないため、
-    // 実際の実装では LocalStack の内部APIを直接呼び出すか、
-    // ファイルシステムからメッセージを読み取る必要があります
+    // LocalStackの内部APIを使用してSESメッセージを取得
+    const localstackEndpoint = process.env.LOCALSTACK_ENDPOINT || "http://localhost:4566";
+    const sesApiUrl = `${localstackEndpoint}/_aws/ses`;
+    
+    console.log('Fetching SES messages from:', sesApiUrl);
+    
+    const response = await fetch(sesApiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    // ここではモックデータを返す
+    if (!response.ok) {
+      console.error('SES API response not ok:', response.status, response.statusText);
+      throw new Error(`SES API call failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('SES API response:', data);
+
+    if (!data.messages || !Array.isArray(data.messages)) {
+      console.log('No messages found in LocalStack SES');
+      return [];
+    }
+
+    return data.messages.map((msg: any) => ({
+      messageId: msg.Id,
+      timestamp: new Date(msg.Timestamp),
+      source: msg.Source,
+      destination: msg.Destination?.ToAddresses || [],
+      subject: msg.Subject,
+      body: msg.Body?.text_part || '',
+      bodyHtml: msg.Body?.html_part || undefined,
+      status: "sent" as const,
+    }));
+  } catch (error) {
+    console.error("Failed to get messages:", error);
+    console.error('LocalStack endpoint:', process.env.LOCALSTACK_ENDPOINT);
+    
+    // エラーの場合はモックデータを返す
+    console.log('Returning mock data due to error');
     return [
       {
         messageId: "mock-message-1",
@@ -69,9 +106,6 @@ export async function getMessages(): Promise<SESMessage[]> {
         status: "sent",
       },
     ];
-  } catch (error) {
-    console.error("Failed to get messages:", error);
-    throw new Error("メッセージ一覧の取得に失敗しました");
   }
 }
 

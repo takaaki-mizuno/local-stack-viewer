@@ -33,8 +33,16 @@ export interface S3ObjectDetail {
 
 export async function listBuckets(): Promise<S3Bucket[]> {
   try {
+    console.log('Attempting to connect to LocalStack S3 at:', process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566');
+    console.log('S3 Client config:', {
+      endpoint: process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566',
+      region: process.env.AWS_DEFAULT_REGION || 'us-east-1',
+      forcePathStyle: true
+    });
+    
     const command = new ListBucketsCommand({});
     const response = await s3Client.send(command);
+    console.log('S3 ListBuckets response:', response);
 
     return (
       response.Buckets?.map((bucket) => ({
@@ -44,6 +52,13 @@ export async function listBuckets(): Promise<S3Bucket[]> {
     );
   } catch (error) {
     console.error("Failed to list buckets:", error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: (error as any)?.code,
+      statusCode: (error as any)?.$metadata?.httpStatusCode,
+      endpoint: process.env.LOCALSTACK_ENDPOINT,
+      region: process.env.AWS_DEFAULT_REGION
+    });
     throw new Error("バケット一覧の取得に失敗しました");
   }
 }
