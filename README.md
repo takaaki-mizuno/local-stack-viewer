@@ -97,10 +97,43 @@ npm run dev
 
 アプリケーションは以下の環境変数を使用します：
 
-- `LOCALSTACK_ENDPOINT` - LocalStackのエンドポイント（デフォルト: http://localhost:4566）
+### LocalStackエンドポイント
+- `LOCALSTACK_ENDPOINT` - サーバーサイド用LocalStackエンドポイント（デフォルト: http://localhost:4566）
+  - ローカル開発: `http://localhost:4566`
+  - Docker環境: `http://localstack:4566`
+- `NEXT_PUBLIC_LOCALSTACK_ENDPOINT` - クライアントサイド用LocalStackエンドポイント（デフォルト: http://localhost:4566）
+  - 常に: `http://localhost:4566`（ブラウザからのアクセス用）
+
+### AWS認証情報
 - `AWS_ACCESS_KEY_ID` - AWS アクセスキー（デフォルト: test）
 - `AWS_SECRET_ACCESS_KEY` - AWS シークレットキー（デフォルト: test）
 - `AWS_DEFAULT_REGION` - AWSリージョン（デフォルト: us-east-1）
+
+### Docker環境での設定例
+
+Docker環境では、サーバーサイドとクライアントサイドで異なるエンドポイントを使用します：
+
+```bash
+# .env.docker
+LOCALSTACK_ENDPOINT=http://localstack:4566
+NEXT_PUBLIC_LOCALSTACK_ENDPOINT=http://localhost:4566
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+AWS_DEFAULT_REGION=us-east-1
+```
+
+### ローカル開発での設定例
+
+ローカル開発では、両方とも同じエンドポイントを使用します：
+
+```bash
+# .env.local
+LOCALSTACK_ENDPOINT=http://localhost:4566
+NEXT_PUBLIC_LOCALSTACK_ENDPOINT=http://localhost:4566
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+AWS_DEFAULT_REGION=us-east-1
+```
 
 ## プロジェクト構成
 

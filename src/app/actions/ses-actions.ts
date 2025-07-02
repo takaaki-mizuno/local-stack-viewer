@@ -47,8 +47,8 @@ export async function checkSESConnection(): Promise<boolean> {
 export async function getMessages(): Promise<SESMessage[]> {
   try {
     // LocalStackの内部APIを使用してSESメッセージを取得
-    const localstackEndpoint = process.env.LOCALSTACK_ENDPOINT || "http://localhost:4566";
-    const sesApiUrl = `${localstackEndpoint}/_aws/ses`;
+    const serverSideEndpoint = process.env.LOCALSTACK_ENDPOINT || "http://localhost:4566";
+    const sesApiUrl = `${serverSideEndpoint}/_aws/ses`;
     
     console.log('Fetching SES messages from:', sesApiUrl);
     

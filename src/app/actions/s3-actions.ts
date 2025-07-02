@@ -8,7 +8,7 @@ import {
   HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client } from "@/lib/aws-config";
+import { s3Client, s3ClientForPresignedUrl } from "@/lib/aws-config";
 
 export interface S3Bucket {
   name: string;
@@ -33,9 +33,10 @@ export interface S3ObjectDetail {
 
 export async function listBuckets(): Promise<S3Bucket[]> {
   try {
-    console.log('Attempting to connect to LocalStack S3 at:', process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566');
+    const serverSideEndpoint = process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566';
+    console.log('Attempting to connect to LocalStack S3 at:', serverSideEndpoint);
     console.log('S3 Client config:', {
-      endpoint: process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566',
+      endpoint: serverSideEndpoint,
       region: process.env.AWS_DEFAULT_REGION || 'us-east-1',
       forcePathStyle: true
     });
@@ -105,7 +106,7 @@ export async function getObjectDetail(
       Bucket: bucketName,
       Key: objectKey,
     });
-    const downloadUrl = await getSignedUrl(s3Client, getCommand, {
+    const downloadUrl = await getSignedUrl(s3ClientForPresignedUrl, getCommand, {
       expiresIn: 3600,
     });
 

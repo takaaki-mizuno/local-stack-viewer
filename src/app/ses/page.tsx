@@ -43,10 +43,10 @@ export default async function SESPage() {
           <div className="rounded-lg border bg-card p-8 text-center">
             <div className="text-destructive">
               <p className="text-lg font-semibold">
-                SESサービスに接続できません
+                LocalStackに接続できません
               </p>
               <p className="text-sm text-muted-foreground mt-2">
-                LocalStackが起動しているか確認してください
+                LocalStackが起動しているか確認してください（localhost:4566）
               </p>
               <RefreshButton />
             </div>
