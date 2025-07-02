@@ -256,10 +256,14 @@ aws --endpoint-url=http://localhost:4566 ses send-email \
   --message Subject={Data="Docker Test"},Body={Text={Data="Test from Docker environment"}}
 ```
 
+## データ削除
+
+永続化データを完全に削除したい場合は、docker volume rm localstack-viewer_localstack-data を実行してください
+
 ## トラブルシューティング
 
 ### Docker環境
-- アプリケーションが起動しない場合は、LocalStackの健康状態を確認してください
+- アプリケーションが起動しない場合は、LocalStackのヘルスチェックを確認してください
 - ポート3100が使用中の場合は、docker-compose.ymlのポートマッピングを変更してください
 - イメージの再ビルドが必要な場合：`docker compose build --no-cache app`
 
