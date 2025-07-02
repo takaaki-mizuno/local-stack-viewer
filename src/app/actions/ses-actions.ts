@@ -46,33 +46,90 @@ export async function checkSESConnection(): Promise<boolean> {
 
 export async function getMessages(): Promise<SESMessage[]> {
   try {
-    // LocalStackの内部APIを使用してSESメッセージを取得
     const serverSideEndpoint = process.env.LOCALSTACK_ENDPOINT || "http://localhost:4566";
-    const sesApiUrl = `${serverSideEndpoint}/_aws/ses`;
+    console.log('serverSideEndpoint:', serverSideEndpoint);
     
-    console.log('Fetching SES messages from:', sesApiUrl);
-    
-    const response = await fetch(sesApiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    // 複数のエンドポイントを試す
+    const possibleEndpoints = [
+      `${serverSideEndpoint}/_aws/ses`,
+      `${serverSideEndpoint}/_localstack/ses`,
+      `${serverSideEndpoint}/ses/_aws/messages`,
+      `${serverSideEndpoint}/_aws/ses/messages`,
+    ];
 
-    if (!response.ok) {
-      console.error('SES API response not ok:', response.status, response.statusText);
-      throw new Error(`SES API call failed: ${response.status}`);
+    let data: { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] } | LocalStackSESMessage[] | null = null;
+    let successfulEndpoint = '';
+
+    for (const endpoint of possibleEndpoints) {
+      try {
+        console.log('Trying SES endpoint:', endpoint);
+        
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log(`Response from ${endpoint}:`, response.status, response.statusText);
+
+        if (response.ok) {
+          data = await response.json() as { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] } | LocalStackSESMessage[];
+          successfulEndpoint = endpoint;
+          console.log('Successfully fetched data from:', endpoint);
+          break;
+        }
+      } catch (endpointError) {
+        console.log(`Error with endpoint ${endpoint}:`, endpointError instanceof Error ? endpointError.message : 'Unknown error');
+        continue;
+      }
     }
 
-    const data = await response.json();
-    console.log('SES API response:', data);
+    if (!data) {
+      console.error('All SES endpoints failed. Trying LocalStack health check...');
+      
+      // LocalStackのヘルスチェックを試す
+      try {
+        const healthResponse = await fetch(`${serverSideEndpoint}/_localstack/health`, {
+          method: 'GET',
+        });
+        const healthData = await healthResponse.json();
+        console.log('LocalStack health:', healthData);
+      } catch (healthError) {
+        console.error('Health check failed:', healthError);
+      }
+      
+      throw new Error("SESメッセージAPIにアクセスできません");
+    }
 
-    if (!data.messages || !Array.isArray(data.messages)) {
-      console.log('No messages found in LocalStack SES');
+    console.log('SES API response from', successfulEndpoint, ':', data);
+
+    // レスポンス形式の確認と処理
+    if (!data) {
+      console.log('No data received from SES API');
       return [];
     }
 
-    return data.messages.map((msg: LocalStackSESMessage) => ({
+    // 複数の可能なレスポンス形式を処理
+    let messages: LocalStackSESMessage[] = [];
+    
+    if (Array.isArray(data)) {
+      messages = data;
+    } else if (data && typeof data === 'object') {
+      if ('messages' in data && Array.isArray(data.messages)) {
+        messages = data.messages;
+      } else if ('emails' in data && Array.isArray(data.emails)) {
+        messages = data.emails;
+      } else {
+        console.log('No messages found in response format:', Object.keys(data));
+        return [];
+      }
+    } else {
+      console.log('Unexpected response format');
+      return [];
+    }
+
+    return messages.map((msg: LocalStackSESMessage) => ({
       messageId: msg.Id,
       timestamp: new Date(msg.Timestamp),
       source: msg.Source,
@@ -84,42 +141,11 @@ export async function getMessages(): Promise<SESMessage[]> {
     }));
   } catch (error) {
     console.error("Failed to get messages:", error);
-    console.error('LocalStack endpoint:', process.env.LOCALSTACK_ENDPOINT);
-    
-    // エラーの場合はモックデータを返す
-    console.log('Returning mock data due to error');
-    return [
-      {
-        messageId: "mock-message-1",
-        timestamp: new Date("2025-01-01T10:00:00Z"),
-        source: "sender@example.com",
-        destination: ["recipient@example.com"],
-        subject: "テストメール 1",
-        body: "これはテストメールの本文です。",
-        bodyHtml: "<p>これは<strong>テストメール</strong>の本文です。</p>",
-        status: "sent",
-      },
-      {
-        messageId: "mock-message-2",
-        timestamp: new Date("2025-01-01T11:00:00Z"),
-        source: "admin@example.com",
-        destination: ["user1@example.com", "user2@example.com"],
-        subject: "お知らせ",
-        body: "重要なお知らせがあります。",
-        status: "sent",
-      },
-      {
-        messageId: "mock-message-3",
-        timestamp: new Date("2025-01-01T12:00:00Z"),
-        source: "no-reply@example.com",
-        destination: ["customer@example.com"],
-        subject: "登録完了のお知らせ",
-        body: "ご登録ありがとうございます。",
-        bodyHtml:
-          "<div><h2>ご登録ありがとうございます</h2><p>アカウントが正常に作成されました。</p></div>",
-        status: "sent",
-      },
-    ];
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      endpoint: process.env.LOCALSTACK_ENDPOINT,
+    });
+    throw new Error("メッセージ一覧の取得に失敗しました");
   }
 }
 

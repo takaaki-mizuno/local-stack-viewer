@@ -9,17 +9,19 @@ services:
       - SERVICES=s3,ses
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./scripts/localstack-init.sh:/etc/localstack/init/ready.d/init-aws.sh
     networks:
       - localstack-net
     healthcheck:
-      test: ["CMD-SHELL", "timeout 10s bash -c 'until echo > /dev/tcp/localhost/4566; do sleep 1; done'"]
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
       interval: 10s
-      timeout: 15s
+      timeout: 5s
       retries: 10
-      start_period: 30s
-
   app:
     build:
       context: .
