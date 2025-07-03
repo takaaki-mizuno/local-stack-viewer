@@ -1,6 +1,7 @@
-# LocalStack Viewer
+# LS Viewer
 
-LocalStackのS3とSESサービスを管理するWebアプリケーション
+Unofficial Web UI for LocalStack S3 and SES services.
+LocalStack is a trademark of LocalStack Inc. This project is not affiliated with or endorsed by LocalStack Inc.
 
 ## 機能
 
