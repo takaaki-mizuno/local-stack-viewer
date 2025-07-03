@@ -45,7 +45,7 @@ npm run docker:logs
 npm run docker:down
 ```
 
-アプリケーションは http://localhost:3100 で利用できます。
+アプリケーションは http://localhost:3200 で利用できます。
 
 ### Option 2: ローカル開発環境
 
@@ -67,7 +67,7 @@ npm run localstack:up
 npm run dev
 ```
 
-アプリケーションは http://localhost:3100 で利用できます。
+アプリケーションは http://localhost:3200 で利用できます。
 
 ## 利用可能なスクリプト
 
@@ -222,7 +222,7 @@ docker compose ps
 curl http://localhost:4566/_localstack/health
 
 # アプリケーションにアクセス
-open http://localhost:3100
+open http://localhost:3200
 
 # ログを確認
 npm run docker:logs
@@ -265,7 +265,7 @@ aws --endpoint-url=http://localhost:4566 ses send-email \
 
 ### Docker環境
 - アプリケーションが起動しない場合は、LocalStackのヘルスチェックを確認してください
-- ポート3100が使用中の場合は、docker-compose.ymlのポートマッピングを変更してください
+- ポート3200が使用中の場合は、docker-compose.ymlのポートマッピングを変更してください
 - イメージの再ビルドが必要な場合：`docker compose build --no-cache app`
 
 ## ライセンス
