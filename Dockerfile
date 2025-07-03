@@ -25,26 +25,28 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+# ログ出力を有効にするため、NODE_ENVをdevelopmentに設定
+# ENV NODE_ENV production
+ENV NODE_ENV development
 ENV NEXT_TELEMETRY_DISABLED 1
+# ログレベルを設定してデバッグ情報を出力
+ENV DEBUG "*"
+ENV LOG_LEVEL "debug"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-
-# 適切な所有者設定でスタンドアロン出力をコピー
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 USER nextjs
 
 EXPOSE 3000
 
 ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+# HOSTNAMEはnext startでは不要なためコメントアウト
+# ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

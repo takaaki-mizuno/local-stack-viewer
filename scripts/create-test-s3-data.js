@@ -3,7 +3,7 @@
 const { S3Client, CreateBucketCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3Client = new S3Client({
-  endpoint: process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566',
+  endpoint: process.env.LOCALSTACK_ENDPOINT || 'http://localstack:4566',
   region: 'us-east-1',
   credentials: {
     accessKeyId: 'test',

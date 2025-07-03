@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: localstack-viewer
     ports:
-      - "3100:3000"
+      - "3200:3000"
     env_file:
       - .env.docker
     depends_on:
@@ -38,6 +38,13 @@ services:
         condition: service_healthy
     networks:
       - localstack-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    tty: true
+    stdin_open: true
 
 networks:
   localstack-net:
