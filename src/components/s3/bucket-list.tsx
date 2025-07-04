@@ -3,24 +3,24 @@
 import Link from "next/link";
 import { Folder, Calendar } from "lucide-react";
 import { S3Bucket } from "@/app/actions/s3-actions";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 interface BucketListProps {
   buckets: S3Bucket[];
 }
 
 export function BucketList({ buckets }: BucketListProps) {
-  const t = useTranslations('s3');
+  const t = useTranslations("s3");
 
   if (buckets.length === 0) {
     return (
       <div className="text-center py-12">
         <Folder className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-semibold text-foreground">
-          {t('empty')}
+          {t("empty")}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('emptyDescription')}
+          {t("emptyDescription")}
         </p>
       </div>
     );

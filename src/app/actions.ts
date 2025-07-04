@@ -1,10 +1,10 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-import { Locale, locales } from '@/i18n/config';
+import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { Locale, locales } from "@/i18n/config";
 
-const LOCALE_COOKIE_NAME = 'locale';
+const LOCALE_COOKIE_NAME = "locale";
 
 export async function setLocale(locale: Locale) {
   if (!locales.includes(locale)) {
@@ -13,12 +13,12 @@ export async function setLocale(locale: Locale) {
 
   const cookieStore = await cookies();
   cookieStore.set(LOCALE_COOKIE_NAME, locale, {
-    path: '/',
+    path: "/",
     maxAge: 60 * 60 * 24 * 365, // 1 year
-    sameSite: 'lax',
+    sameSite: "lax",
     httpOnly: false, // Allow client-side access
   });
 
   // Revalidate all paths to reflect the language change
-  revalidatePath('/', 'layout');
+  revalidatePath("/", "layout");
 }

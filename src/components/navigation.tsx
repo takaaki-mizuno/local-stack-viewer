@@ -9,21 +9,21 @@ import { LanguageSwitcher } from "./language-switcher";
 
 export function Navigation() {
   const pathname = usePathname();
-  const t = useTranslations('navigation');
+  const t = useTranslations("navigation");
 
   const navigationItems = [
     {
-      name: t('home'),
+      name: t("home"),
       href: "/",
       icon: Home,
     },
     {
-      name: t('s3'),
+      name: t("s3"),
       href: "/s3",
       icon: Database,
     },
     {
-      name: t('ses'),
+      name: t("ses"),
       href: "/ses",
       icon: Mail,
     },
@@ -34,7 +34,7 @@ export function Navigation() {
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
           <Cloud className="h-6 w-6" />
-          <span className="text-xl font-bold">{t('title')}</span>
+          <span className="text-xl font-bold">{t("title")}</span>
         </div>
       </div>
 

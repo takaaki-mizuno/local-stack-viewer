@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { SESMessage } from "@/app/actions/ses-actions";
 import { cn } from "@/lib/utils";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 interface MessageListProps {
   messages: SESMessage[];
@@ -32,18 +32,21 @@ function getStatusIcon(status: SESMessage["status"]) {
   }
 }
 
-function getStatusText(status: SESMessage["status"], t: (key: string) => string) {
+function getStatusText(
+  status: SESMessage["status"],
+  t: (key: string) => string
+) {
   switch (status) {
     case "sent":
-      return t('statusSent');
+      return t("statusSent");
     case "bounced":
-      return t('statusBounced');
+      return t("statusBounced");
     case "complaint":
-      return t('statusComplaint');
+      return t("statusComplaint");
     case "delivery":
-      return t('statusDelivered');
+      return t("statusDelivered");
     default:
-      return t('statusUnknown');
+      return t("statusUnknown");
   }
 }
 
@@ -63,17 +66,17 @@ function getStatusColor(status: SESMessage["status"]) {
 }
 
 export function MessageList({ messages }: MessageListProps) {
-  const t = useTranslations('ses');
+  const t = useTranslations("ses");
 
   if (messages.length === 0) {
     return (
       <div className="text-center py-12">
         <Mail className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-semibold text-foreground">
-          {t('empty')}
+          {t("empty")}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('emptyDescription')}
+          {t("emptyDescription")}
         </p>
       </div>
     );
@@ -109,7 +112,9 @@ export function MessageList({ messages }: MessageListProps) {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
                   <div className="flex items-center">
                     <User className="h-4 w-4 mr-1" />
-                    <span className="truncate">{t('from')}: {message.source}</span>
+                    <span className="truncate">
+                      {t("from")}: {message.source}
+                    </span>
                   </div>
 
                   <div className="flex items-center">
@@ -119,10 +124,10 @@ export function MessageList({ messages }: MessageListProps) {
                       <Users className="h-4 w-4 mr-1" />
                     )}
                     <span className="truncate">
-                      {t('to')}:{" "}
+                      {t("to")}:{" "}
                       {message.destination.length === 1
                         ? message.destination[0]
-                        : `${message.destination.length}${t('recipients')}`}
+                        : `${message.destination.length}${t("recipients")}`}
                     </span>
                   </div>
 

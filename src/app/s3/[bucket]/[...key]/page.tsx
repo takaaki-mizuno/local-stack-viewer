@@ -62,7 +62,8 @@ export default async function ObjectDetailPage({
             <div className="text-destructive">
               <p className="text-lg font-semibold">エラーが発生しました</p>
               <p className="text-sm text-muted-foreground mt-2">
-                オブジェクト &quot;{objectKey}&quot; の詳細を取得できませんでした
+                オブジェクト &quot;{objectKey}&quot;
+                の詳細を取得できませんでした
               </p>
             </div>
           </div>

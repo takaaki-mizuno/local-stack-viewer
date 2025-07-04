@@ -46,30 +46,35 @@ export async function checkSESConnection(): Promise<boolean> {
 
 export async function getMessages(): Promise<SESMessage[]> {
   try {
-    const serverSideEndpoint = process.env.LOCALSTACK_ENDPOINT || "http://localstack:4566";
+    const serverSideEndpoint =
+      process.env.LOCALSTACK_ENDPOINT || "http://localstack:4566";
     const endpoint = `${serverSideEndpoint}/_aws/ses`;
-    console.log('SES endpoint:', endpoint);
+    console.log("SES endpoint:", endpoint);
     const response = await fetch(endpoint, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error(`SESメッセージAPIにアクセスできません: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `SESメッセージAPIにアクセスできません: ${response.status} ${response.statusText}`
+      );
     }
 
-    const data = await response.json() as { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] } | LocalStackSESMessage[];
+    const data = (await response.json()) as
+      | { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] }
+      | LocalStackSESMessage[];
 
     // レスポンス形式の確認と処理
     let messages: LocalStackSESMessage[] = [];
     if (Array.isArray(data)) {
       messages = data;
-    } else if (data && typeof data === 'object') {
-      if ('messages' in data && Array.isArray(data.messages)) {
+    } else if (data && typeof data === "object") {
+      if ("messages" in data && Array.isArray(data.messages)) {
         messages = data.messages;
-      } else if ('emails' in data && Array.isArray(data.emails)) {
+      } else if ("emails" in data && Array.isArray(data.emails)) {
         messages = data.emails;
       } else {
         return [];
@@ -84,7 +89,7 @@ export async function getMessages(): Promise<SESMessage[]> {
       source: msg.Source,
       destination: msg.Destination?.ToAddresses || [],
       subject: msg.Subject,
-      body: msg.Body?.text_part || '',
+      body: msg.Body?.text_part || "",
       bodyHtml: msg.Body?.html_part || undefined,
       status: "sent" as const,
     }));

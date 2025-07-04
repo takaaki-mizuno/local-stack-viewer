@@ -33,17 +33,21 @@ export interface S3ObjectDetail {
 
 export async function listBuckets(): Promise<S3Bucket[]> {
   try {
-    const serverSideEndpoint = process.env.LOCALSTACK_ENDPOINT || 'http://localhost:4566';
-    console.log('Attempting to connect to LocalStack S3 at:', serverSideEndpoint);
-    console.log('S3 Client config:', {
+    const serverSideEndpoint =
+      process.env.LOCALSTACK_ENDPOINT || "http://localhost:4566";
+    console.log(
+      "Attempting to connect to LocalStack S3 at:",
+      serverSideEndpoint
+    );
+    console.log("S3 Client config:", {
       endpoint: serverSideEndpoint,
-      region: process.env.AWS_DEFAULT_REGION || 'us-east-1',
-      forcePathStyle: true
+      region: process.env.AWS_DEFAULT_REGION || "us-east-1",
+      forcePathStyle: true,
     });
-    
+
     const command = new ListBucketsCommand({});
     const response = await s3Client.send(command);
-    console.log('S3 ListBuckets response:', response);
+    console.log("S3 ListBuckets response:", response);
 
     return (
       response.Buckets?.map((bucket) => ({
@@ -53,14 +57,23 @@ export async function listBuckets(): Promise<S3Bucket[]> {
     );
   } catch (error) {
     console.error("Failed to list buckets:", error);
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      code: error && typeof error === 'object' && 'code' in error ? error.code : undefined,
-      statusCode: error && typeof error === 'object' && '$metadata' in error && 
-        error.$metadata && typeof error.$metadata === 'object' && 'httpStatusCode' in error.$metadata
-        ? error.$metadata.httpStatusCode : undefined,
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      code:
+        error && typeof error === "object" && "code" in error
+          ? error.code
+          : undefined,
+      statusCode:
+        error &&
+        typeof error === "object" &&
+        "$metadata" in error &&
+        error.$metadata &&
+        typeof error.$metadata === "object" &&
+        "httpStatusCode" in error.$metadata
+          ? error.$metadata.httpStatusCode
+          : undefined,
       endpoint: process.env.LOCALSTACK_ENDPOINT,
-      region: process.env.AWS_DEFAULT_REGION
+      region: process.env.AWS_DEFAULT_REGION,
     });
     throw new Error("バケット一覧の取得に失敗しました");
   }
@@ -106,9 +119,13 @@ export async function getObjectDetail(
       Bucket: bucketName,
       Key: objectKey,
     });
-    const downloadUrl = await getSignedUrl(s3ClientForPresignedUrl, getCommand, {
-      expiresIn: 3600,
-    });
+    const downloadUrl = await getSignedUrl(
+      s3ClientForPresignedUrl,
+      getCommand,
+      {
+        expiresIn: 3600,
+      }
+    );
 
     return {
       key: objectKey,
