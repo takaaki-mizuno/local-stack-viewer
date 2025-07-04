@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { SESMessage } from "@/app/actions/ses-actions";
 import { cn } from "@/lib/utils";
+import { useTranslations } from 'next-intl';
 
 interface MessageListProps {
   messages: SESMessage[];
@@ -31,18 +32,18 @@ function getStatusIcon(status: SESMessage["status"]) {
   }
 }
 
-function getStatusText(status: SESMessage["status"]) {
+function getStatusText(status: SESMessage["status"], t: (key: string) => string) {
   switch (status) {
     case "sent":
-      return "送信済み";
+      return t('statusSent');
     case "bounced":
-      return "バウンス";
+      return t('statusBounced');
     case "complaint":
-      return "苦情";
+      return t('statusComplaint');
     case "delivery":
-      return "配信済み";
+      return t('statusDelivered');
     default:
-      return "不明";
+      return t('statusUnknown');
   }
 }
 
@@ -62,15 +63,17 @@ function getStatusColor(status: SESMessage["status"]) {
 }
 
 export function MessageList({ messages }: MessageListProps) {
+  const t = useTranslations('ses');
+
   if (messages.length === 0) {
     return (
       <div className="text-center py-12">
         <Mail className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-semibold text-foreground">
-          メッセージがありません
+          {t('empty')}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          まだメールが送信されていません
+          {t('emptyDescription')}
         </p>
       </div>
     );
@@ -99,14 +102,14 @@ export function MessageList({ messages }: MessageListProps) {
                     )}
                   >
                     {getStatusIcon(message.status)}
-                    <span>{getStatusText(message.status)}</span>
+                    <span>{getStatusText(message.status, t)}</span>
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
                   <div className="flex items-center">
                     <User className="h-4 w-4 mr-1" />
-                    <span className="truncate">送信者: {message.source}</span>
+                    <span className="truncate">{t('from')}: {message.source}</span>
                   </div>
 
                   <div className="flex items-center">
@@ -116,18 +119,18 @@ export function MessageList({ messages }: MessageListProps) {
                       <Users className="h-4 w-4 mr-1" />
                     )}
                     <span className="truncate">
-                      宛先:{" "}
+                      {t('to')}:{" "}
                       {message.destination.length === 1
                         ? message.destination[0]
-                        : `${message.destination.length}名`}
+                        : `${message.destination.length}${t('recipients')}`}
                     </span>
                   </div>
 
                   <div className="flex items-center">
                     <Clock className="h-4 w-4 mr-1" />
                     <span>
-                      {message.timestamp.toLocaleDateString("ja-JP")}{" "}
-                      {message.timestamp.toLocaleTimeString("ja-JP")}
+                      {message.timestamp.toLocaleDateString()}{" "}
+                      {message.timestamp.toLocaleTimeString()}
                     </span>
                   </div>
                 </div>

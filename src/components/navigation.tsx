@@ -2,36 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Cloud, Database, Mail, Home } from "lucide-react";
-
-const navigationItems = [
-  {
-    name: "ダッシュボード",
-    href: "/",
-    icon: Home,
-  },
-  {
-    name: "S3",
-    href: "/s3",
-    icon: Database,
-  },
-  {
-    name: "SES",
-    href: "/ses",
-    icon: Mail,
-  },
-];
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Navigation() {
   const pathname = usePathname();
+  const t = useTranslations('navigation');
+
+  const navigationItems = [
+    {
+      name: t('home'),
+      href: "/",
+      icon: Home,
+    },
+    {
+      name: t('s3'),
+      href: "/s3",
+      icon: Database,
+    },
+    {
+      name: t('ses'),
+      href: "/ses",
+      icon: Mail,
+    },
+  ];
 
   return (
     <nav className="flex h-16 items-center justify-between border-b bg-background px-4">
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
           <Cloud className="h-6 w-6" />
-          <span className="text-xl font-bold">LocalStack Viewer</span>
+          <span className="text-xl font-bold">{t('title')}</span>
         </div>
       </div>
 
@@ -58,6 +61,7 @@ export function Navigation() {
             </Link>
           );
         })}
+        <LanguageSwitcher />
       </div>
     </nav>
   );
