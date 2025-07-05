@@ -15,9 +15,12 @@
     "localstack:up": "docker compose up -d localstack",
     "localstack:down": "docker compose down",
     "docker:build": "docker build -t localstack-viewer .",
+    "docker:build:dev": "docker compose build app",
     "docker:up": "docker compose up -d",
+    "docker:up:dev": "docker compose up",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
+    "docker:logs:app": "docker compose logs -f app",
     "docker:restart": "docker compose restart app",
     "test:send-email": "node scripts/send-test-email.js",
     "test:create-s3-data": "node scripts/create-test-s3-data.js"
