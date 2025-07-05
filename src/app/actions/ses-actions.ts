@@ -63,9 +63,20 @@ export async function getMessages(): Promise<SESMessage[]> {
       );
     }
 
-    const data = (await response.json()) as
-      | { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] }
-      | LocalStackSESMessage[];
+    const text = await response.text();
+    if (!text || text.trim() === "") {
+      throw new Error("SES_SERVICE_UNAVAILABLE");
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text) as
+        | { messages?: LocalStackSESMessage[]; emails?: LocalStackSESMessage[] }
+        | LocalStackSESMessage[];
+    } catch (parseError) {
+      console.error("Failed to parse SES response:", parseError);
+      throw new Error("SES_SERVICE_UNAVAILABLE");
+    }
 
     // レスポンス形式の確認と処理
     let messages: LocalStackSESMessage[] = [];
@@ -95,6 +106,15 @@ export async function getMessages(): Promise<SESMessage[]> {
     }));
   } catch (error) {
     console.error("Failed to get messages:", error);
+    
+    // Service unavailable error
+    if (error instanceof Error && 
+        (error.message.includes("ECONNREFUSED") || 
+         error.message.includes("connect ECONNREFUSED") ||
+         error.message === "SES_SERVICE_UNAVAILABLE")) {
+      throw new Error("SES_SERVICE_UNAVAILABLE");
+    }
+    
     throw new Error("メッセージ一覧の取得に失敗しました");
   }
 }

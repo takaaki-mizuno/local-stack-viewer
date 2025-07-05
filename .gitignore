@@ -47,3 +47,4 @@ storybook-static
 
 localstack-data
 playwright-report
+test-results

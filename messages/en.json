@@ -1,14 +1,14 @@
 {
   "navigation": {
-    "title": "LocalStack Viewer",
+    "title": "LS Viewer",
     "home": "Home",
     "s3": "S3 Buckets",
     "ses": "SES Messages"
   },
   "home": {
-    "title": "LocalStack Viewer",
+    "title": "LS Viewer",
     "description": "Manage S3 and SES services in LocalStack",
-    "welcomeMessage": "Welcome to LocalStack Management Console",
+    "welcomeMessage": "Welcome to LS Viewer Management Console",
     "localstackDescription": "AWS service emulation in local environment",
     "s3Description": "Object storage management",
     "sesDescription": "Email service monitoring",
@@ -56,7 +56,8 @@
     "loading": "Loading...",
     "folder": "Folder",
     "connectionError": "Cannot connect to LocalStack",
-    "connectionErrorMessage": "Please check if LocalStack is running (localhost:4566)"
+    "connectionErrorMessage": "Please check if LocalStack is running (localhost:4566)",
+    "serviceUnavailable": "S3 service is unavailable"
   },
   "ses": {
     "title": "SES Messages",
@@ -82,7 +83,8 @@
     "statusBounced": "Bounced",
     "statusComplaint": "Complaint",
     "statusDelivered": "Delivered",
-    "statusUnknown": "Unknown"
+    "statusUnknown": "Unknown",
+    "serviceUnavailable": "SES service is unavailable"
   },
   "common": {
     "error": "An error occurred",
@@ -92,6 +94,15 @@
     "close": "Close",
     "ok": "OK",
     "cancel": "Cancel"
+  },
+  "serviceStatus": {
+    "s3Unavailable": "S3 service is unavailable",
+    "s3UnavailableDescription": "LocalStack is not providing S3 service or connection failed.",
+    "sesUnavailable": "SES service is unavailable",
+    "sesUnavailableDescription": "LocalStack is not providing SES service or it's not activated.",
+    "checkLocalStack": "Please check if LocalStack is running",
+    "activateService": "Please activate the service",
+    "serviceOffline": "Service is offline"
   },
   "language": {
     "label": "Language",

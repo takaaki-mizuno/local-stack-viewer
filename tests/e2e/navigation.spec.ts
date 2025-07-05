@@ -5,7 +5,7 @@ test.describe('Navigation', () => {
     await page.goto('/')
 
     // ダッシュボードページの確認
-    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LocalStack Viewer')
+    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LS Viewer')
     
     // S3ページに移動
     await page.getByRole('link', { name: 'S3' }).click()
@@ -20,7 +20,7 @@ test.describe('Navigation', () => {
     // ダッシュボードに戻る
     await page.getByRole('link', { name: 'ダッシュボード' }).click()
     await expect(page).toHaveURL('/')
-    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LocalStack Viewer')
+    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LS Viewer')
   })
 
   test('モバイル表示が正しく動作する', async ({ page }) => {

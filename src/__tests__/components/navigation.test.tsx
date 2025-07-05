@@ -12,7 +12,7 @@ jest.mock("next-intl", () => ({
   useTranslations: () => {
     return (key: string) => {
       const translations: Record<string, string> = {
-        title: "LocalStack Viewer",
+        title: "LS Viewer",
         home: "ダッシュボード",
         s3: "S3",
         ses: "SES",
@@ -37,7 +37,7 @@ describe("Navigation", () => {
   test("ナビゲーションアイテムが正しく表示される", () => {
     render(<Navigation />);
 
-    expect(screen.getByText("LocalStack Viewer")).toBeInTheDocument();
+    expect(screen.getByText("LS Viewer")).toBeInTheDocument();
     expect(screen.getByText("ダッシュボード")).toBeInTheDocument();
     expect(screen.getByText("S3")).toBeInTheDocument();
     expect(screen.getByText("SES")).toBeInTheDocument();

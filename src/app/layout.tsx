@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LocalStack Viewer",
+  title: "LS Viewer",
   description: "LocalStack S3 and SES viewer application",
 };
 

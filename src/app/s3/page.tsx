@@ -1,6 +1,7 @@
 import { MainLayout } from "@/components/main-layout";
 import { BucketList } from "@/components/s3/bucket-list";
 import { RefreshButton } from "@/components/refresh-button";
+import { ServiceUnavailable } from "@/components/service-unavailable";
 import { listBuckets } from "@/app/actions/s3-actions";
 import { Database } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -32,7 +33,10 @@ export default async function S3Page() {
         </div>
       </MainLayout>
     );
-  } catch {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "";
+    const isServiceUnavailable = errorMessage === "S3_SERVICE_UNAVAILABLE";
+    
     return (
       <MainLayout>
         <div className="space-y-6">
@@ -43,15 +47,21 @@ export default async function S3Page() {
             </div>
           </div>
 
-          <div className="rounded-lg border bg-card p-8 text-center">
-            <div className="text-destructive">
-              <p className="text-lg font-semibold">{t("connectionError")}</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                {t("connectionErrorMessage")}
-              </p>
-              <RefreshButton />
+          {isServiceUnavailable ? (
+            <ServiceUnavailable service="s3" />
+          ) : (
+            <div className="rounded-lg border bg-card p-8 text-center">
+              <div className="text-destructive">
+                <p className="text-lg font-semibold">{t("connectionError")}</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {t("connectionErrorMessage")}
+                </p>
+                <div className="mt-4">
+                  <RefreshButton />
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </MainLayout>
     );

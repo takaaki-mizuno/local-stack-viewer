@@ -1,14 +1,14 @@
 {
   "navigation": {
-    "title": "LocalStack Viewer",
+    "title": "LS Viewer",
     "home": "ホーム",
     "s3": "S3 Buckets",
     "ses": "SES Messages"
   },
   "home": {
-    "title": "LocalStack Viewer",
-    "description": "LocalStackのS3とSESサービスを管理するWebアプリケーション",
-    "welcomeMessage": "LocalStackの管理画面へようこそ",
+    "title": "LS Viewer",
+    "description": "LS",
+    "welcomeMessage": "LS Viewerの管理画面へようこそ",
     "localstackDescription": "ローカル環境でのAWSサービスエミュレーション",
     "s3Description": "オブジェクトストレージの管理",
     "sesDescription": "メール送信サービスの監視",
@@ -56,7 +56,8 @@
     "loading": "読み込み中...",
     "folder": "フォルダ",
     "connectionError": "LocalStackに接続できません",
-    "connectionErrorMessage": "LocalStackが起動しているか確認してください（localhost:4566）"
+    "connectionErrorMessage": "LocalStackが起動しているか確認してください（localhost:4566）",
+    "serviceUnavailable": "S3サービスが利用できません"
   },
   "ses": {
     "title": "SES メッセージ",
@@ -82,7 +83,8 @@
     "statusBounced": "バウンス",
     "statusComplaint": "苦情",
     "statusDelivered": "配信済み",
-    "statusUnknown": "不明"
+    "statusUnknown": "不明",
+    "serviceUnavailable": "SESサービスが利用できません"
   },
   "common": {
     "error": "エラーが発生しました",
@@ -92,6 +94,15 @@
     "close": "閉じる",
     "ok": "OK",
     "cancel": "キャンセル"
+  },
+  "serviceStatus": {
+    "s3Unavailable": "S3サービスが利用できません",
+    "s3UnavailableDescription": "LocalStackがS3サービスを提供していないか、接続できません。",
+    "sesUnavailable": "SESサービスが利用できません",
+    "sesUnavailableDescription": "LocalStackがSESサービスを提供していないか、アクティベートされていません。",
+    "checkLocalStack": "LocalStackが起動しているか確認してください",
+    "activateService": "サービスをアクティベートしてください",
+    "serviceOffline": "サービスがオフラインです"
   },
   "language": {
     "label": "言語",

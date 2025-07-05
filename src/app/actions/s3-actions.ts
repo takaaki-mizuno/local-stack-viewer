@@ -75,6 +75,14 @@ export async function listBuckets(): Promise<S3Bucket[]> {
       endpoint: process.env.LOCALSTACK_ENDPOINT,
       region: process.env.AWS_DEFAULT_REGION,
     });
+    
+    // Service unavailable error
+    if (error instanceof Error && 
+        (error.message.includes("ECONNREFUSED") || 
+         error.message.includes("connect ECONNREFUSED"))) {
+      throw new Error("S3_SERVICE_UNAVAILABLE");
+    }
+    
     throw new Error("バケット一覧の取得に失敗しました");
   }
 }
@@ -100,6 +108,14 @@ export async function listObjects(
     );
   } catch (error) {
     console.error("Failed to list objects:", error);
+    
+    // Service unavailable error
+    if (error instanceof Error && 
+        (error.message.includes("ECONNREFUSED") || 
+         error.message.includes("connect ECONNREFUSED"))) {
+      throw new Error("S3_SERVICE_UNAVAILABLE");
+    }
+    
     throw new Error("オブジェクト一覧の取得に失敗しました");
   }
 }
