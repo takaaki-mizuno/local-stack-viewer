@@ -8,17 +8,17 @@ test.describe('Navigation', () => {
     await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LS Viewer')
     
     // S3ページに移動
-    await page.getByRole('link', { name: 'S3' }).click()
+    await page.getByRole('link', { name: 'S3 Buckets' }).click()
     await expect(page).toHaveURL('/s3')
-    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('S3 バケット')
+    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('S3 Buckets')
     
     // SESページに移動
-    await page.getByRole('link', { name: 'SES' }).click()
+    await page.getByRole('link', { name: 'SES Messages' }).click()
     await expect(page).toHaveURL('/ses')
-    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('SES メッセージ')
+    await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('SES Messages')
     
     // ダッシュボードに戻る
-    await page.getByRole('link', { name: 'ダッシュボード' }).click()
+    await page.getByRole('link', { name: 'Home' }).click()
     await expect(page).toHaveURL('/')
     await expect(page.locator('main').getByRole('heading', { level: 1 })).toContainText('LS Viewer')
   })
@@ -28,9 +28,9 @@ test.describe('Navigation', () => {
     await page.goto('/')
 
     // ナビゲーションが表示される
-    await expect(page.locator('nav').getByText('LocalStack Viewer')).toBeVisible()
-    await expect(page.getByRole('link', { name: 'ダッシュボード' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'S3' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'SES' })).toBeVisible()
+    await expect(page.locator('nav').getByText('LS Viewer')).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Home' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'S3 Buckets' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'SES Messages' })).toBeVisible()
   })
 })
