@@ -2,6 +2,19 @@ import { render, screen } from "@testing-library/react";
 import { BucketList } from "@/components/s3/bucket-list";
 import { S3Bucket } from "@/app/actions/s3-actions";
 
+// next-intlをモック
+jest.mock("next-intl", () => ({
+  useTranslations: () => {
+    return (key: string) => {
+      const translations: Record<string, string> = {
+        empty: "バケットがありません",
+        emptyDescription: "LocalStackでS3バケットを作成してください",
+      };
+      return translations[key] || key;
+    };
+  },
+}));
+
 const mockBuckets: S3Bucket[] = [
   {
     name: "test-bucket-1",

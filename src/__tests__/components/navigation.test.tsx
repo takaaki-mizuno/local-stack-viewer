@@ -7,6 +7,26 @@ jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
 }));
 
+// next-intlをモック
+jest.mock("next-intl", () => ({
+  useTranslations: () => {
+    return (key: string) => {
+      const translations: Record<string, string> = {
+        title: "LocalStack Viewer",
+        home: "ダッシュボード",
+        s3: "S3",
+        ses: "SES",
+      };
+      return translations[key] || key;
+    };
+  },
+}));
+
+// language-switcherコンポーネントをモック
+jest.mock("@/components/language-switcher", () => ({
+  LanguageSwitcher: () => <div>Language Switcher</div>,
+}));
+
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
 
 describe("Navigation", () => {

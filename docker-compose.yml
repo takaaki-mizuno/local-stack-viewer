@@ -35,6 +35,7 @@ services:
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
       - AWS_ENDPOINT_URL=http://localstack:4566
+      - LOCALSTACK_ENDPOINT=http://localstack:4566
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test

@@ -4,6 +4,7 @@ import { RefreshButton } from "@/components/refresh-button";
 import { listObjects } from "@/app/actions/s3-actions";
 import { Folder, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 interface BucketPageProps {
   params: Promise<{ bucket: string }>;
@@ -12,6 +13,7 @@ interface BucketPageProps {
 export default async function BucketPage({ params }: BucketPageProps) {
   const { bucket } = await params;
   const bucketName = decodeURIComponent(bucket);
+  const t = await getTranslations("s3");
 
   try {
     const objects = await listObjects(bucketName);
@@ -31,7 +33,7 @@ export default async function BucketPage({ params }: BucketPageProps) {
               <div>
                 <h1 className="text-3xl font-bold">{bucketName}</h1>
                 <p className="text-muted-foreground">
-                  {objects.length} 個のオブジェクト
+                  {objects.length} {t("objectsCount")}
                 </p>
               </div>
             </div>
@@ -62,10 +64,9 @@ export default async function BucketPage({ params }: BucketPageProps) {
 
           <div className="rounded-lg border bg-card p-8 text-center">
             <div className="text-destructive">
-              <p className="text-lg font-semibold">エラーが発生しました</p>
+              <p className="text-lg font-semibold">{t("error")}</p>
               <p className="text-sm text-muted-foreground mt-2">
-                バケット &quot;{bucketName}&quot;
-                のオブジェクト一覧を取得できませんでした
+                {t("errorBucketObjects", { bucketName })}
               </p>
             </div>
           </div>

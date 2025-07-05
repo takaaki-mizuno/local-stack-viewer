@@ -14,6 +14,7 @@ import { formatFileSize, isImageFile } from "@/lib/s3-utils";
 import { deleteObject } from "@/app/actions/s3-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface ObjectListProps {
   bucketName: string;
@@ -23,9 +24,10 @@ interface ObjectListProps {
 export function ObjectList({ bucketName, objects }: ObjectListProps) {
   const router = useRouter();
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
+  const t = useTranslations("s3");
 
   const handleDelete = async (objectKey: string) => {
-    if (!confirm(`"${objectKey}" を削除しますか？この操作は取り消せません。`)) {
+    if (!confirm(t("confirmDelete", { objectKey }))) {
       return;
     }
 
@@ -35,7 +37,7 @@ export function ObjectList({ bucketName, objects }: ObjectListProps) {
       router.refresh();
     } catch (error) {
       console.error("Delete failed:", error);
-      alert("削除に失敗しました");
+      alert(t("deleteFailed"));
     } finally {
       setDeletingKeys((prev) => {
         const newSet = new Set(prev);
@@ -50,10 +52,10 @@ export function ObjectList({ bucketName, objects }: ObjectListProps) {
       <div className="text-center py-12">
         <File className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-semibold text-foreground">
-          オブジェクトがありません
+          {t("objectsEmpty")}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          このバケットにはまだオブジェクトがありません
+          {t("objectsEmptyDescription")}
         </p>
       </div>
     );
@@ -92,8 +94,8 @@ export function ObjectList({ bucketName, objects }: ObjectListProps) {
                     {object.lastModified && (
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-1" />
-                        {object.lastModified.toLocaleDateString("ja-JP")}{" "}
-                        {object.lastModified.toLocaleTimeString("ja-JP")}
+                        {object.lastModified.toLocaleDateString()}{" "}
+                        {object.lastModified.toLocaleTimeString()}
                       </div>
                     )}
                     {object.storageClass && (
@@ -109,7 +111,7 @@ export function ObjectList({ bucketName, objects }: ObjectListProps) {
                 <Link
                   href={`/s3/${bucketName}/${encodeURIComponent(object.key)}`}
                   className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
-                  title="詳細を表示"
+                  title={t("viewDetails")}
                 >
                   <Download className="h-4 w-4" />
                 </Link>
@@ -117,7 +119,7 @@ export function ObjectList({ bucketName, objects }: ObjectListProps) {
                   onClick={() => handleDelete(object.key)}
                   disabled={isDeleting}
                   className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors disabled:opacity-50"
-                  title="削除"
+                  title={t("delete")}
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
